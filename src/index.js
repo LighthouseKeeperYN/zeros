@@ -1,25 +1,23 @@
 module.exports = function zeros(expression) {
-  let factorialsInExpression = expression.split('*');
+  expression = expression.split('*').map(value => {
+    let arr = [];
+    let m = value.indexOf('!!') === -1 ? 1 : 2;
+    value = parseInt(value, 10);
 
-  function zerosInEach(factorial) {
-    let factorialNumber = parseInt(factorial, 10);
-    let count = 0;
-    if (factorial.indexOf('!!') === -1) {
-      for (let i = 5; factorialNumber / i >= 1; i *= 5) {
-        count += factorialNumber / i;
-      }
-      return Math.floor(count);
-    }
-    else {
-      if (factorialNumber % 2 != 0) return 0;
-      for (let i = 10; factorialNumber / i >= 1; i *= 5) {
-        count += factorialNumber / i;
-      }
-      return Math.floor(count);
-    }
-  }
+    for (; value > 0; value -= m) arr.push(value);
+    return arr;
+  });
 
-  factorialsInExpression = factorialsInExpression.map(value => zerosInEach(value));
- 
-  return factorialsInExpression.reduce((a, b) => a + b)
+  let twos = 0;
+  let fives = 0;
+
+  expression.forEach(value => {
+    value.forEach(value => {
+      for (let num = value; num % 2 === 0; num /= 2) twos++;
+      for (let num = value; num % 5 === 0; num /= 5) fives++;
+    });
+  });
+
+
+  return fives > twos ? twos : fives;
 }
